@@ -9,15 +9,12 @@ LIB_DIR_PATH="${SRC_DIR_PATH}/lib"
 main() {
   version="${1}"
   log_info "Installing @cyclonedx/cdxgen via npm..."
-  log_debug "npm install -g @cyclonedx/cdxgen"
   npm install -g @cyclonedx/cdxgen
   log_info "Installing owasp-depscan via pip..."
   if [ "${version}" = "latest" ]; then
-    log_debug "python -m pip install owasp-depscan"
-    python -m pip install owasp-depscan
+    python -m pip install owasp-depscan --break-system-packages
   else
-    log_debug "python -m pip install owasp-depscan==${version}"
-    python -m pip install owasp-depscan=="${version}"
+    python -m pip install owasp-depscan=="${version}" --break-system-packages
   fi
 }
 
