@@ -16,12 +16,12 @@ main() {
   else
     os=$(grep "^ID=" "/etc/os-release" | cut -d '=' -f 2)
     if [ "${os}" = "alpine" ]; then
-      log_info "Installing python3 via apk..."
-      apk --no-cache add python3
+      log_info "Installing python3 and py3-pip via apk..."
+      apk --no-cache add python3 py3-pip
     else
-      log_info "Installing python3 via apt..."
+      log_info "Installing python3, python3-pip and python-is-python3 via apt..."
       apt update
-      apt install -y python3
+      apt install -y python3 python3-pip python-is-python3
     fi
   fi
 }
