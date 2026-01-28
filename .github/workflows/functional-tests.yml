@@ -87,7 +87,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: ["ubuntu"]
+        image: ["alpine", "ubuntu"]
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v6

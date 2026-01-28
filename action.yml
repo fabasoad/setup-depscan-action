@@ -37,13 +37,17 @@ runs:
       shell: sh
       working-directory: "${{ github.action_path }}/src"
 
-    - name: Setup Node
+    - name: Setup npm
       if: ${{ steps.info.outputs.bin-installed == 'false' && steps.info.outputs.npm-installed == 'false' }}
-      uses: actions/setup-node@v6
+      run: ./install-npm.sh
+      shell: sh
+      working-directory: "${{ github.action_path }}/src"
 
-    - name: Setup Python
+    - name: Setup python
       if: ${{ steps.info.outputs.bin-installed == 'false' && steps.info.outputs.python-installed == 'false' }}
-      uses: actions/setup-python@v6
+      run: ./install-python.sh
+      shell: sh
+      working-directory: "${{ github.action_path }}/src"
 
     - name: Setup depscan
       if: ${{ steps.info.outputs.bin-installed == 'false' }}
