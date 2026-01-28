@@ -20,13 +20,12 @@ This action sets up a [depscan](https://depscan.readthedocs.io/) CLI tool.
 
 ## Prerequisites
 
-The following tools have to be installed for successful work of this GitHub Action:
-[curl](https://curl.se).
+None.
 
 ## Inputs
 
 ```yaml
-- uses: fabasoad/setup-depscan-action@v0
+- uses: fabasoad/setup-depscan-action@v1
   with:
     # (Optional) depscan version. Defaults to the latest version.
     version: "6.1.0"
@@ -60,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: fabasoad/setup-depscan-action@v0
+      - uses: fabasoad/setup-depscan-action@v1
       - name: Run CLI
         run: depscan --version
 ```
