@@ -1,0 +1,59 @@
+---
+name: "Setup depscan"
+author: "Yevhen Fabizhevskyi"
+description: "Setup depscan GitHub Action"
+branding:
+  icon: terminal
+  color: gray-dark
+inputs:
+  version:
+    description: depscan version. Defaults to the latest version.
+    required: false
+    default: "latest"
+  force:
+    description: |
+      If "false" skips installation if depscan is already installed. If "true"
+      installs depscan in any case. Defaults to "false".
+    required: false
+    default: "false"
+  github-token:
+    description: |
+      GitHub token that is used to send requests to GitHub API such as downloading
+      asset. Defaults to the token provided by GitHub Actions environment.
+    required: false
+    default: ${{ github.token }}
+outputs:
+  installed:
+    description: Whether depscan was installed or not.
+    value: "${{ steps.install-depscan.outcome == 'success' }}"
+runs:
+  using: "composite"
+  steps:
+    - name: Collect info
+      id: info
+      env:
+        INPUT_FORCE: "${{ inputs.force }}"
+      run: ./collect-info.sh "${INPUT_FORCE}"
+      shell: sh
+      working-directory: "${{ github.action_path }}/src"
+
+    - name: Setup Node
+      if: ${{ steps.info.outputs.bin-installed == 'false' && steps.info.outputs.npm-installed == 'false' }}
+      uses: actions/setup-node@v6
+
+    - name: Setup Python
+      if: ${{ steps.info.outputs.bin-installed == 'false' && steps.info.outputs.python-installed == 'false' }}
+      uses: actions/setup-python@v6
+
+    - name: Setup depscan
+      if: ${{ steps.info.outputs.bin-installed == 'false' }}
+      id: install-depscan
+      env:
+        INPUT_VERSION: "${{ inputs.version }}"
+      run: ./install-depscan.sh "${INPUT_VERSION}"
+      shell: sh
+      working-directory: "${{ github.action_path }}/src"
+
+    - name: Print version
+      run: depscan --version
+      shell: sh

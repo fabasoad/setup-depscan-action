@@ -1,0 +1,142 @@
+---
+name: Functional Tests
+
+on: # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - main
+  pull_request:
+    paths:
+      - .github/workflows/functional-tests.yml
+      - src/**
+      - action.yml
+  schedule:
+    # Every Friday at 09:00 JST
+    - cron: "0 0 * * 5"
+  workflow_dispatch: {}
+
+defaults:
+  run:
+    shell: sh
+
+permissions:
+  contents: read
+
+jobs:
+  get-versions:
+    name: Get 3 latest versions
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      versions: ${{ steps.prepare-list.outputs.versions }}
+    steps:
+      - name: Get releases
+        id: github-releases
+        uses: yakubique/github-releases@v1.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          repository: "owasp-dep-scan/dep-scan"
+          sort: "desc"
+      - name: Prepare list
+        id: prepare-list
+        env:
+          RELEASES_AMOUNT: "3"
+        run: |
+          versions=$(echo '${{ steps.github-releases.outputs.releases }}' \
+            | jq -c -r --arg n "${RELEASES_AMOUNT}" '.[0:($n | tonumber)] | map(sub("^v"; "")) | . += ["latest"]')
+          echo "versions=${versions}" >> "$GITHUB_OUTPUT"
+  setup-depscan:
+    name: Setup depscan
+    needs: [get-versions]
+    runs-on: ${{ matrix.os }}-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu", "macos", "windows"]
+        version: ${{ fromJSON(needs.get-versions.outputs.versions) }}
+    steps:
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v6
+      - name: Setup depscan
+        id: setup-depscan
+        uses: ./
+        with:
+          version: ${{ matrix.version }}
+      - name: Test action completion
+        run: |
+          test_equal() {
+            if [ "${2}" != "${3}" ]; then
+              echo "::error title=${1}::Expected: ${3}. Actual: ${2}."
+              exit 1
+            fi
+          }
+          test_equal "depscan should be installed" \
+            "${{ steps.setup-depscan.outputs.installed }}" \
+            "true"
+      - name: Print version
+        run: depscan --version
+  setup-depscan-in-container:
+    name: Setup depscan in container
+    needs: [get-versions]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    container:
+      image: ${{ matrix.image }}:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ["ubuntu"]
+    steps:
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v6
+      - name: Setup depscan
+        id: setup-depscan
+        uses: ./
+      - name: Test action completion
+        run: |
+          test_equal() {
+            if [ "${2}" != "${3}" ]; then
+              echo "::error title=${1}::Expected: ${3}. Actual: ${2}."
+              exit 1
+            fi
+          }
+          test_equal "depscan should be installed" \
+            "${{ steps.setup-depscan.outputs.installed }}" \
+            "true"
+      - name: Print version
+        run: depscan --version
+  test-force:
+    name: Test force
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        force: ["true", "false"]
+    steps:
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v6
+      - name: Setup depscan 1
+        id: setup-depscan-1
+        uses: ./
+      - name: Setup depscan 2
+        id: setup-depscan-2
+        uses: ./
+        with:
+          force: ${{ matrix.force }}
+      - name: Test action completion
+        run: |
+          test_equal() {
+            if [ "${2}" != "${3}" ]; then
+              echo "::error title=${1}::Expected: ${3}. Actual: ${2}."
+              exit 1
+            fi
+          }
+          test_equal "Wrong \"installed\" output from setup-depscan-1" \
+            "${{ steps.setup-depscan-1.outputs.installed }}" \
+            "true"
+          test_equal "Wrong \"installed\" output from setup-depscan-2" \
+            "${{ steps.setup-depscan-2.outputs.installed }}" \
+            "${{ matrix.force }}"
