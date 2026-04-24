@@ -59,6 +59,8 @@ jobs:
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v6
+        with:
+          persist-credentials: "false"
       - name: Setup depscan
         id: setup-depscan
         uses: ./
@@ -91,6 +93,8 @@ jobs:
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v6
+        with:
+          persist-credentials: "false"
       - name: Setup depscan
         id: setup-depscan
         uses: ./
@@ -118,6 +122,8 @@ jobs:
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v6
+        with:
+          persist-credentials: "false"
       - name: Setup depscan 1
         id: setup-depscan-1
         uses: ./
