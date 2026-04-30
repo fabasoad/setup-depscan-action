@@ -6,7 +6,7 @@
 ![linting](https://github.com/fabasoad/setup-depscan-action/actions/workflows/linting.yml/badge.svg)
 ![security](https://github.com/fabasoad/setup-depscan-action/actions/workflows/security.yml/badge.svg)
 
-This action sets up a [depscan](https://depscan.readthedocs.io/) CLI tool.
+This action sets up an [OWASP depscan](https://depscan.readthedocs.io/) CLI tool.
 
 ## Supported OS
 
