@@ -23,6 +23,10 @@ main() {
       apk --no-cache --update add python3.14 py3-pip
     else
       log_info "Installing python3.14, python3-pip and python-is-python3 via apt..."
+      log_debug "apt install -y software-properties-common"
+      sudo apt install -y software-properties-common
+      log_debug "add-apt-repository ppa:deadsnakes/ppa -y"
+      sudo add-apt-repository ppa:deadsnakes/ppa -y
       log_debug "apt update"
       sudo apt update
       log_debug "apt install -y python3.14 python3-pip python-is-python3"
