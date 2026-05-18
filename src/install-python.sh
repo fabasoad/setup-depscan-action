@@ -8,7 +8,7 @@ LIB_DIR_PATH="${SRC_DIR_PATH}/lib"
 
 main() {
   if [ "${RUNNER_OS}" = "macOS" ]; then
-    log_info "Installing python@3.14 via brew..."
+    log_info "Installing python 3.14 via brew..."
     log_debug "brew install python@3.14"
     brew install python@3.14
   elif [ "${RUNNER_OS}" = "Windows" ]; then
@@ -18,11 +18,11 @@ main() {
   else
     os=$(grep "^ID=" "/etc/os-release" | cut -d '=' -f 2)
     if [ "${os}" = "alpine" ]; then
-      log_info "Installing python3.14 and py3-pip via apk..."
+      log_info "Installing python 3.14 via apk..."
       log_debug "apk --no-cache --update add python3.14 py3-pip"
       apk --no-cache --update add python3.14 py3-pip
     else
-      log_info "Installing python3.14, python3-pip and python-is-python3 via apt..."
+      log_info "Installing python 3.14 via apt..."
       log_debug "apt install -y software-properties-common"
       sudo apt install -y software-properties-common
       log_debug "add-apt-repository ppa:deadsnakes/ppa -y"

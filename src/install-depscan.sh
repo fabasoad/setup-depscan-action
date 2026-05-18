@@ -16,8 +16,8 @@ main() {
     log_debug "python -m pip install owasp-depscan --break-system-packages"
     python -m pip install owasp-depscan --break-system-packages
   else
-    log_debug "python -m pip install owasp-depscan==${version} --break-system-packages"
-    python -m pip install owasp-depscan=="${version}" --break-system-packages
+    log_debug "python -m pip install ds-analysis-lib==${version} owasp-depscan==${version} --break-system-packages"
+    python -m pip install ds-analysis-lib=="${version}" owasp-depscan=="${version}" --break-system-packages
   fi
 }
 
