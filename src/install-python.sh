@@ -12,21 +12,21 @@ main() {
     log_debug "brew install python@3.14"
     brew install python@3.14
   elif [ "${RUNNER_OS}" = "Windows" ]; then
-    log_info "Installing python via choco..."
-    log_debug "choco install python -y"
-    choco install python -y
+    log_info "Installing python 3.14 via choco..."
+    log_debug "choco install python --version=3.14.5 -y"
+    choco install python --version=3.14.5 -y
   else
     os=$(grep "^ID=" "/etc/os-release" | cut -d '=' -f 2)
     if [ "${os}" = "alpine" ]; then
-      log_info "Installing python3 and py3-pip via apk..."
-      log_debug "apk --no-cache --update add python3 py3-pip"
-      apk --no-cache --update add python3 py3-pip
+      log_info "Installing python3.14 and py3-pip via apk..."
+      log_debug "apk --no-cache --update add python3.14 py3-pip"
+      apk --no-cache --update add python3.14 py3-pip
     else
-      log_info "Installing python3, python3-pip and python-is-python3 via apt..."
+      log_info "Installing python3.14, python3-pip and python-is-python3 via apt..."
       log_debug "apt update"
       sudo apt update
-      log_debug "apt install -y python3 python3-pip python-is-python3"
-      sudo apt install -y python3 python3-pip python-is-python3
+      log_debug "apt install -y python3.14 python3-pip python-is-python3"
+      sudo apt install -y python3.14 python3-pip python-is-python3
     fi
   fi
 }
