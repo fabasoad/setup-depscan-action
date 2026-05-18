@@ -12,3 +12,9 @@ log() {
 log_info() {
   log "info" "${1}"
 }
+
+log_debug() {
+  if [ "${ACTIONS_STEP_DEBUG}" = "true" ]; then
+    log "debug" "${1}"
+  fi
+}
