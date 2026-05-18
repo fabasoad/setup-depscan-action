@@ -21,8 +21,8 @@ main() {
       log_info "Installing python 3.14 via apk..."
       log_debug "echo https://dl-cdn.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories"
       echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
-      log_debug "apk --no-cache --update add python3.14 py3-pip"
-      apk --no-cache --update add python3.14 py3-pip
+      log_debug "apk --no-cache --update add python3 py3-pip"
+      apk --no-cache --update add python3 py3-pip
     else
       log_info "Installing python 3.14 via apt..."
       sudo_cmd=$(if command -v sudo >/dev/null 2>&1; then echo sudo; fi)
@@ -36,6 +36,7 @@ main() {
       ${sudo_cmd} apt install -y python3.14 python3-pip python-is-python3
     fi
   fi
+  python --version
 }
 
 main "$@"
