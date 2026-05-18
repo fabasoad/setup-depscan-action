@@ -23,10 +23,11 @@ main() {
       apk --no-cache --update add npm
     else
       log_info "Installing npm via apt..."
+      sudo_cmd=$(if command -v sudo >/dev/null 2>&1; then echo sudo; fi)
       log_debug "apt update"
-      sudo apt update
+      ${sudo_cmd} apt update
       log_debug "apt install -y npm"
-      sudo apt install -y npm
+      ${sudo_cmd} apt install -y npm
     fi
   fi
 }
