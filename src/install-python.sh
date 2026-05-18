@@ -24,9 +24,9 @@ main() {
     else
       log_info "Installing python3, python3-pip and python-is-python3 via apt..."
       log_debug "apt update"
-      apt update
+      sudo apt update
       log_debug "apt install -y python3 python3-pip python-is-python3"
-      apt install -y python3 python3-pip python-is-python3
+      sudo apt install -y python3 python3-pip python-is-python3
     fi
   fi
 }

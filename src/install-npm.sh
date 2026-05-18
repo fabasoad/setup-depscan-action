@@ -24,9 +24,9 @@ main() {
     else
       log_info "Installing npm via apt..."
       log_debug "apt update"
-      apt update
+      sudo apt update
       log_debug "apt install -y npm"
-      apt install -y npm
+      sudo apt install -y npm
     fi
   fi
 }

@@ -14,9 +14,13 @@ main() {
 
   python_installed="false"
   if command -v python >/dev/null 2>&1; then
+    python --version
     python_minor=$(python --version | cut -d '.' -f 2)
     if [ "${python_minor}" gt 12 ]; then
       python_installed="true"
+    else
+      python_version=$(python --version | cut -d ' ' -f 2)
+      log_info "python version is older than minimum required version (3.13.0)"
     fi
   fi
   echo "python-installed=${python_installed}" >> "$GITHUB_OUTPUT"
